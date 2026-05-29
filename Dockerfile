@@ -16,15 +16,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/tsx ./node_modules/tsx
-COPY --from=builder /app/node_modules/bcrypt ./node_modules/bcrypt
-COPY --from=builder /app/scripts ./scripts
-RUN chmod +x scripts/entrypoint.sh
 
 EXPOSE 3000
 USER node
-CMD ["/app/scripts/entrypoint.sh"]
+CMD ["node", "server.js"]

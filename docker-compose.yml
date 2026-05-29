@@ -1,27 +1,16 @@
 services:
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: tokenrelay
-      POSTGRES_PASSWORD: tokenrelay
-      POSTGRES_DB: tokenrelay
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   app:
     build: .
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: "postgresql://tokenrelay:tokenrelay@db:5432/tokenrelay"
+      DATABASE_URL: "file:./dev.db"
       ENCRYPTION_KEY: "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2"
       SESSION_SECRET: "super-secret-session-key-change-in-production"
       DEFAULT_ADMIN_EMAIL: "admin@tokenrelay.local"
       DEFAULT_ADMIN_PASSWORD: "admin123"
-    depends_on:
-      - db
+    volumes:
+      - data:/app
 
 volumes:
-  pgdata:
+  data:
