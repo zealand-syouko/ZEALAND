@@ -23,4 +23,4 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=deps /app/node_modules ./node_modules
 
 EXPOSE 3000 8080
-CMD ["sh", "-c", "npx prisma migrate deploy 2>/dev/null || npx prisma migrate dev --name init --skip-generate; npx prisma db seed 2>/dev/null; node server.js"]
+CMD ["sh", "-c", "export PORT=3000; npx prisma migrate deploy 2>/dev/null || npx prisma migrate dev --name init --skip-generate; npx prisma db seed 2>/dev/null; node server.js"]
