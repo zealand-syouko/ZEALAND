@@ -27,6 +27,6 @@ COPY --from=deps /app/node_modules/bcrypt ./node_modules/bcrypt
 COPY deploy/railway-entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 3000 8080
 USER node
 CMD ["/app/entrypoint.sh"]

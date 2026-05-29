@@ -9,5 +9,5 @@ prisma migrate deploy 2>/dev/null || prisma migrate dev --name init --skip-gener
 echo "Seeding database..."
 prisma db seed 2>/dev/null || echo "Seed skipped (already exists)"
 
-echo "Starting app..."
+echo "Starting app on port ${PORT:-3000}..."
 exec node server.js
