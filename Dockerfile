@@ -10,8 +10,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN cp prisma/schema.pg.prisma prisma/schema.prisma
 ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
-RUN npx prisma generate
-RUN npx next build
+ENV PATH=/app/node_modules/.bin:$PATH
+RUN prisma generate
+RUN next build
 
 FROM base AS runner
 COPY --from=builder /app/public ./public
