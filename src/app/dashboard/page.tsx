@@ -9,17 +9,18 @@ interface Stats {
   activeKeys: number;
   totalKeys: number;
   byModel: { model: string; tokens: number; calls: number }[];
+  transactions: { amount: number; type: string; description: string; createdAt: string }[];
 }
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [balance, setBalance] = useState<number>(0);
 
   useEffect(() => {
-    fetch("/api/dashboard/stats")
-      .then((r) => r.json())
-      .then(setStats);
+    fetch("/api/dashboard/stats").then((r) => r.json()).then(setStats);
+    fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance));
   }, []);
 
   if (!stats) return <p>Loading...</p>;
@@ -28,7 +29,8 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Overview</h2>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-5 gap-4">
+        <StatCard label="Balance (cents)" value={balance.toLocaleString()} highlight />
         <StatCard label="Today Calls" value={stats.today.calls.toLocaleString()} />
         <StatCard label="Today Tokens" value={stats.today.tokens.toLocaleString()} />
         <StatCard label="Week Calls" value={stats.week.calls.toLocaleString()} />
@@ -55,35 +57,47 @@ export default function DashboardPage() {
         </div>
 
         <div className="rounded-xl bg-white p-6 shadow">
-          <h3 className="font-semibold mb-4">Breakdown</h3>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500">
-                <th className="pb-2">Model</th>
-                <th className="pb-2">Calls</th>
-                <th className="pb-2">Tokens</th>
-              </tr>
-            </thead>
-            <tbody>
-              {stats.byModel.map((m) => (
-                <tr key={m.model} className="border-t">
-                  <td className="py-2">{m.model}</td>
-                  <td className="py-2">{m.calls}</td>
-                  <td className="py-2">{m.tokens.toLocaleString()}</td>
+          <h3 className="font-semibold mb-4">Recent Transactions</h3>
+          {stats.transactions.length === 0 ? (
+            <p className="text-gray-400 text-sm">No transactions yet</p>
+          ) : (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-500">
+                  <th className="pb-2">Time</th>
+                  <th className="pb-2">Type</th>
+                  <th className="pb-2">Amount</th>
+                  <th className="pb-2">Detail</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {stats.transactions.map((t, i) => (
+                  <tr key={i} className="border-t">
+                    <td className="py-2 text-gray-500 text-xs">{new Date(t.createdAt).toLocaleString()}</td>
+                    <td className="py-2">
+                      <span className={`px-2 py-0.5 rounded text-xs ${t.type === "topup" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                        {t.type === "topup" ? "Top-up" : "Charge"}
+                      </span>
+                    </td>
+                    <td className={`py-2 text-sm ${t.amount >= 0 ? "text-green-600" : "text-red-600"}`}>
+                      {t.amount >= 0 ? "+" : ""}{t.amount}
+                    </td>
+                    <td className="py-2 text-xs text-gray-500 max-w-40 truncate">{t.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="rounded-xl bg-white p-4 shadow">
-      <p className="text-sm text-gray-500">{label}</p>
+    <div className={`rounded-xl p-4 shadow ${highlight ? "bg-black text-white" : "bg-white"}`}>
+      <p className={`text-sm ${highlight ? "text-gray-300" : "text-gray-500"}`}>{label}</p>
       <p className="text-2xl font-bold">{value}</p>
     </div>
   );

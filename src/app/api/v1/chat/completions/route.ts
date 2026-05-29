@@ -7,6 +7,7 @@ import { decrypt } from "@/server/encryption";
 import { createCallLog, incrementApiKeyQuota } from "@/server/db";
 import type { OpenAIChatRequest } from "@/server/types";
 import { checkRateLimit } from "@/server/ratelimit";
+import { chargeUser } from "@/server/billing";
 
 export async function POST(req: NextRequest) {
   const start = Date.now();
@@ -87,7 +88,6 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Fire-and-forget logging (stream — token counts will be 0)
       const latency = Date.now() - start;
       createCallLog({
         apiKeyId: auth.apiKey.id,
@@ -111,21 +111,27 @@ export async function POST(req: NextRequest) {
     } else {
       const response = await adapter.chatSync(body, config);
       const latency = Date.now() - start;
+      const inputTokens = response.usage?.prompt_tokens || 0;
+      const outputTokens = response.usage?.completion_tokens || 0;
       const totalTokens = response.usage?.total_tokens || 0;
 
-      // Async logging
+      // Async logging + billing
       createCallLog({
         apiKeyId: auth.apiKey.id,
         provider: providerName,
         model: body.model,
         endpoint: "/v1/chat/completions",
-        requestTokens: response.usage?.prompt_tokens || 0,
-        responseTokens: response.usage?.completion_tokens || 0,
+        requestTokens: inputTokens,
+        responseTokens: outputTokens,
         totalTokens,
         latencyMs: latency,
         status: 200,
       }).catch(() => {});
+
       incrementApiKeyQuota(auth.apiKey.id, totalTokens).catch(() => {});
+
+      chargeUser(auth.apiKey.userId, body.model, inputTokens, outputTokens, auth.apiKey.id)
+        .catch(() => {});
 
       return NextResponse.json(response);
     }
