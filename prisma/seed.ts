@@ -16,7 +16,6 @@ async function main() {
     console.log(`Admin user already exists: ${email}`);
   }
 
-  // Seed 4 providers (no API keys set)
   const names = ["openai", "anthropic", "google", "deepseek"];
   for (const name of names) {
     await prisma.provider.upsert({
