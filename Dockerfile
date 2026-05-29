@@ -2,8 +2,8 @@ FROM node:22-alpine AS base
 WORKDIR /app
 
 FROM base AS deps
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm install --legacy-peer-deps
 
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
@@ -11,17 +11,16 @@ COPY . .
 RUN cp prisma/schema.pg.prisma prisma/schema.prisma
 ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 RUN npx prisma generate
-RUN npm run build
+RUN npx next build
 
 FROM base AS runner
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=deps /app/node_modules/tsx ./node_modules/tsx
 COPY --from=deps /app/node_modules/bcrypt ./node_modules/bcrypt
 COPY deploy/railway-entrypoint.sh /app/entrypoint.sh
