@@ -6,6 +6,7 @@ import { getProviderByName } from "@/server/db/providers";
 import { decrypt } from "@/server/encryption";
 import { createCallLog, incrementApiKeyQuota } from "@/server/db";
 import type { OpenAIChatRequest } from "@/server/types";
+import { checkRateLimit } from "@/server/ratelimit";
 
 export async function POST(req: NextRequest) {
   const start = Date.now();
@@ -17,6 +18,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: { message: `Auth failed: ${auth.reason}`, type: "auth_error" } },
       { status: 401 },
+    );
+  }
+
+  // Rate limit
+  if (!checkRateLimit(auth.apiKey.id, 120)) {
+    return NextResponse.json(
+      { error: { message: "Rate limit exceeded", type: "rate_limit" } },
+      { status: 429 },
     );
   }
 
