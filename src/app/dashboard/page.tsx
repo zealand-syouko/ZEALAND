@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useTranslations } from "next-intl";
 
 interface Stats {
   today: { calls: number; tokens: number };
@@ -15,6 +16,7 @@ interface Stats {
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
 
 export default function DashboardPage() {
+  const t = useTranslations("dashboard");
   const [stats, setStats] = useState<Stats | null>(null);
   const [balance, setBalance] = useState<number>(0);
 
@@ -23,32 +25,30 @@ export default function DashboardPage() {
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance));
   }, []);
 
-  if (!stats) return <p>Loading...</p>;
+  if (!stats) return <p>{t("loading")}</p>;
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Overview</h2>
+      <h2 className="text-2xl font-bold">{t("overview")}</h2>
 
       <div className="grid grid-cols-5 gap-4">
-        <StatCard label="Balance (cents)" value={balance.toLocaleString()} highlight />
-        <StatCard label="Today Calls" value={stats.today.calls.toLocaleString()} />
-        <StatCard label="Today Tokens" value={stats.today.tokens.toLocaleString()} />
-        <StatCard label="Week Calls" value={stats.week.calls.toLocaleString()} />
-        <StatCard label="Active Keys" value={`${stats.activeKeys}/${stats.totalKeys}`} />
+        <StatCard label={t("balance")} value={balance.toLocaleString()} highlight />
+        <StatCard label={t("todayCalls")} value={stats.today.calls.toLocaleString()} />
+        <StatCard label={t("todayTokens")} value={stats.today.tokens.toLocaleString()} />
+        <StatCard label={t("weekCalls")} value={stats.week.calls.toLocaleString()} />
+        <StatCard label={t("activeKeys")} value={`${stats.activeKeys}/${stats.totalKeys}`} />
       </div>
 
       <div className="grid grid-cols-2 gap-6">
         <div className="rounded-xl bg-white p-6 shadow">
-          <h3 className="font-semibold mb-4">Token Usage by Model (Week)</h3>
+          <h3 className="font-semibold mb-4">{t("tokenUsage")}</h3>
           {stats.byModel.length === 0 ? (
-            <p className="text-gray-400 text-sm">No data</p>
+            <p className="text-gray-400 text-sm">{t("noData")}</p>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie data={stats.byModel} dataKey="tokens" nameKey="model" cx="50%" cy="50%" outerRadius={100}>
-                  {stats.byModel.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                  ))}
+                  {stats.byModel.map((_, i) => (<Cell key={i} fill={COLORS[i % COLORS.length]} />))}
                 </Pie>
                 <Tooltip />
               </PieChart>
@@ -57,32 +57,32 @@ export default function DashboardPage() {
         </div>
 
         <div className="rounded-xl bg-white p-6 shadow">
-          <h3 className="font-semibold mb-4">Recent Transactions</h3>
+          <h3 className="font-semibold mb-4">{t("recentTransactions")}</h3>
           {stats.transactions.length === 0 ? (
-            <p className="text-gray-400 text-sm">No transactions yet</p>
+            <p className="text-gray-400 text-sm">{t("noTransactions")}</p>
           ) : (
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-gray-500">
-                  <th className="pb-2">Time</th>
-                  <th className="pb-2">Type</th>
-                  <th className="pb-2">Amount</th>
-                  <th className="pb-2">Detail</th>
+                  <th className="pb-2">{t("time")}</th>
+                  <th className="pb-2">{t("type")}</th>
+                  <th className="pb-2">{t("amount")}</th>
+                  <th className="pb-2">{t("detail")}</th>
                 </tr>
               </thead>
               <tbody>
-                {stats.transactions.map((t, i) => (
+                {stats.transactions.map((tx, i) => (
                   <tr key={i} className="border-t">
-                    <td className="py-2 text-gray-500 text-xs">{new Date(t.createdAt).toLocaleString()}</td>
+                    <td className="py-2 text-gray-500 text-xs">{new Date(tx.createdAt).toLocaleString()}</td>
                     <td className="py-2">
-                      <span className={`px-2 py-0.5 rounded text-xs ${t.type === "topup" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                        {t.type === "topup" ? "Top-up" : "Charge"}
+                      <span className={`px-2 py-0.5 rounded text-xs ${tx.type === "topup" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                        {tx.type === "topup" ? t("topup") : t("charge")}
                       </span>
                     </td>
-                    <td className={`py-2 text-sm ${t.amount >= 0 ? "text-green-600" : "text-red-600"}`}>
-                      {t.amount >= 0 ? "+" : ""}{t.amount}
+                    <td className={`py-2 text-sm ${tx.amount >= 0 ? "text-green-600" : "text-red-600"}`}>
+                      {tx.amount >= 0 ? "+" : ""}{tx.amount}
                     </td>
-                    <td className="py-2 text-xs text-gray-500 max-w-40 truncate">{t.description}</td>
+                    <td className="py-2 text-xs text-gray-500 max-w-40 truncate">{tx.description}</td>
                   </tr>
                 ))}
               </tbody>
