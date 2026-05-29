@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/server/auth/session";
 import { getAllProviders, upsertProvider, setProviderEnabled } from "@/server/db/providers";
+import { encrypt } from "@/server/encryption";
 import type { ProviderName } from "@/server/types";
 
 export async function GET() {
@@ -19,8 +20,9 @@ export async function POST(req: NextRequest) {
   await requireAdmin();
   const { name, apiKey, baseUrl, isEnabled } = await req.json();
   if (apiKey) {
-    // Store API key as-is for now; encryption will be handled when we add the encryption utility
-    await upsertProvider(name as ProviderName, apiKey, baseUrl || undefined);
+    const encryptionKey = process.env.ENCRYPTION_KEY!;
+    const encrypted = encrypt(apiKey, encryptionKey);
+    await upsertProvider(name as ProviderName, encrypted, baseUrl || undefined);
   }
   if (typeof isEnabled === "boolean") {
     await setProviderEnabled(name as ProviderName, isEnabled);

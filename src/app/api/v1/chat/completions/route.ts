@@ -58,15 +58,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 5. Decrypt API key (with fallback for plaintext)
+  // 5. Decrypt API key
   const encryptionKey = process.env.ENCRYPTION_KEY!;
-  let apiKey: string;
-  try {
-    apiKey = decrypt(providerRecord.apiKeyEncrypted, encryptionKey);
-  } catch {
-    // Fallback: stored as plaintext
-    apiKey = providerRecord.apiKeyEncrypted;
-  }
+  const apiKey = decrypt(providerRecord.apiKeyEncrypted, encryptionKey);
 
   const adapter = getAdapter(providerName as Parameters<typeof getAdapter>[0]);
   const config = {
