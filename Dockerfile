@@ -20,14 +20,7 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin ./node_modules/.bin
-COPY --from=deps /app/node_modules/tsx ./node_modules/tsx
-COPY --from=deps /app/node_modules/bcrypt ./node_modules/bcrypt
-COPY deploy/railway-entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY --from=deps /app/node_modules ./node_modules
 
 EXPOSE 3000 8080
-USER node
-CMD ["/app/entrypoint.sh"]
+CMD ["sh", "-c", "npx prisma migrate deploy 2>/dev/null || npx prisma migrate dev --name init --skip-generate; npx prisma db seed 2>/dev/null; node server.js"]
