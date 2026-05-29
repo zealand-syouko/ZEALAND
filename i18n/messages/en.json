@@ -34,6 +34,8 @@
     "admin": "Admin",
     "pricing": "Pricing",
     "users": "Users",
+    "recharge": "Recharge",
+    "orders": "Orders",
     "signOut": "Sign Out"
   },
   "dashboard": {

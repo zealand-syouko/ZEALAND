@@ -34,6 +34,8 @@
     "admin": "관리",
     "pricing": "가격 설정",
     "users": "사용자 관리",
+    "recharge": "충전",
+    "orders": "주문 관리",
     "signOut": "로그아웃"
   },
   "dashboard": {

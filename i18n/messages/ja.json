@@ -34,6 +34,8 @@
     "admin": "管理",
     "pricing": "料金設定",
     "users": "ユーザー管理",
+    "recharge": "チャージ",
+    "orders": "注文管理",
     "signOut": "ログアウト"
   },
   "dashboard": {

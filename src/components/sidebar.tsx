@@ -17,11 +17,13 @@ export function Sidebar() {
     { href: "/dashboard/keys", label: t("apiKeys") },
     { href: "/dashboard/providers", label: t("providers") },
     { href: "/dashboard/logs", label: t("logs") },
+    { href: "/dashboard/recharge", label: t("recharge") },
   ];
 
   const adminLinks = [
     { href: "/dashboard/admin/pricing", label: t("pricing") },
     { href: "/dashboard/admin/users", label: t("users") },
+    { href: "/dashboard/admin/orders", label: t("orders") },
   ];
 
   useEffect(() => {

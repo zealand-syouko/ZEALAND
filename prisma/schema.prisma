@@ -16,6 +16,7 @@ model User {
   updatedAt    DateTime      @updatedAt @map("updated_at")
   apiKeys      ApiKey[]
   transactions Transaction[]
+  orders       PaymentOrder[]
 
   @@map("users")
 }
@@ -91,4 +92,20 @@ model CallLog {
   @@index([apiKeyId])
   @@index([createdAt])
   @@map("call_logs")
+}
+
+model PaymentOrder {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        Int
+  method        String
+  tradeNo       String?  @map("trade_no")
+  status        String   @default("pending")
+  createdAt     DateTime @default(now()) @map("created_at")
+  paidAt        DateTime? @map("paid_at")
+
+  @@index([userId])
+  @@index([tradeNo])
+  @@map("payment_orders")
 }

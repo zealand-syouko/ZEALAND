@@ -34,6 +34,8 @@
     "admin": "Admin",
     "pricing": "Tarifs",
     "users": "Utilisateurs",
+    "recharge": "Recharger",
+    "orders": "Commandes",
     "signOut": "Déconnexion"
   },
   "dashboard": {

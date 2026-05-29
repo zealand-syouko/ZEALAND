@@ -34,6 +34,8 @@
     "admin": "管理",
     "pricing": "定价管理",
     "users": "用户管理",
+    "recharge": "充值",
+    "orders": "订单管理",
     "signOut": "退出登录"
   },
   "dashboard": {
