@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,15 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("locale")?.value || "en";
-
-  let messages;
-  try {
-    messages = (await import(`@/i18n/messages/${locale}.json`)).default;
-  } catch {
-    messages = (await import(`@/i18n/messages/en.json`)).default;
-  }
+  const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
     <html lang={locale}>
