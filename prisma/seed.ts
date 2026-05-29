@@ -1,0 +1,33 @@
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const email = process.env.DEFAULT_ADMIN_EMAIL || "admin@tokenrelay.local";
+  const password = process.env.DEFAULT_ADMIN_PASSWORD || "admin123";
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (!existing) {
+    const passwordHash = await bcrypt.hash(password, 10);
+    await prisma.user.create({ data: { email, passwordHash } });
+    console.log(`Created admin user: ${email}`);
+  } else {
+    console.log(`Admin user already exists: ${email}`);
+  }
+
+  // Seed 4 providers (no API keys set)
+  const names = ["openai", "anthropic", "google", "deepseek"];
+  for (const name of names) {
+    await prisma.provider.upsert({
+      where: { name },
+      create: { name, apiKeyEncrypted: "" },
+      update: {},
+    });
+  }
+  console.log("Seeded 4 providers");
+}
+
+main()
+  .then(() => prisma.$disconnect())
+  .catch((e) => { console.error(e); prisma.$disconnect(); process.exit(1); });
