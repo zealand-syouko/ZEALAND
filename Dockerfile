@@ -15,6 +15,7 @@ RUN prisma generate
 RUN next build
 
 FROM base AS runner
+ENV NODE_ENV=production
 ENV PATH=/app/node_modules/.bin:$PATH
 ENV HOSTNAME=0.0.0.0
 COPY --from=builder /app/.next ./.next
