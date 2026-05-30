@@ -15,6 +15,7 @@ RUN prisma generate
 RUN next build
 
 FROM base AS runner
+RUN apk add --no-cache openssl1.1-compat
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
