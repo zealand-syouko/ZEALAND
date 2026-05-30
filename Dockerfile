@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:22-slim AS base
 WORKDIR /app
 
 FROM base AS deps
@@ -15,7 +15,6 @@ RUN prisma generate
 RUN next build
 
 FROM base AS runner
-RUN apk add --no-cache openssl1.1-compat
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
