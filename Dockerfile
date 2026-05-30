@@ -23,4 +23,4 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000 8080
-CMD ["sh", "-c", "export PORT=3000; rm -rf prisma/migrations; mkdir -p prisma/migrations; npx prisma migrate dev --name init --skip-generate 2>/dev/null; npx prisma db seed 2>/dev/null; node server.js"]
+CMD ["sh", "-c", "export PORT=3000; if [ ! -f prisma/migrations/migration_lock.toml ] || grep -q sqlite prisma/migrations/migration_lock.toml 2>/dev/null; then rm -rf prisma/migrations; mkdir -p prisma/migrations; npx prisma migrate dev --name init --skip-generate; fi; npx prisma migrate deploy 2>/dev/null; npx prisma db seed 2>/dev/null; node server.js"]
