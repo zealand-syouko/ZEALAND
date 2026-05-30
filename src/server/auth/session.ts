@@ -7,7 +7,7 @@ export interface SessionData {
 }
 
 const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET || "fallback-secret-min-32-chars!!",
+  password: process.env.SESSION_SECRET || "fallback-secret-min-32-chars-ok-now",
   cookieName: "token-relay-session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",

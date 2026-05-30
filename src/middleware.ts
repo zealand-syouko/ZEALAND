@@ -3,7 +3,7 @@ import { getIronSession } from "iron-session";
 import type { SessionData } from "@/server/auth/session";
 
 const sessionOptions = {
-  password: process.env.SESSION_SECRET || "fallback-secret-min-32-chars!!",
+  password: process.env.SESSION_SECRET || "fallback-secret-min-32-chars-ok-now",
   cookieName: "token-relay-session",
   cookieOptions: { secure: process.env.NODE_ENV === "production", httpOnly: true, sameSite: "lax" as const },
 };
