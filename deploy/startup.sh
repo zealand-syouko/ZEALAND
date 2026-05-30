@@ -1,5 +1,6 @@
 #!/bin/sh
-export PORT=3000
+# Use Railway's PORT, default to 3000 if not set
+export PORT=${PORT:-3000}
 
 # Start app in background first so Railway health check passes
 echo "==> Starting app on port ${PORT}..."
