@@ -4,7 +4,7 @@ export PORT=${PORT:-3000}
 
 # Start app in background first so Railway health check passes
 echo "==> Starting app on port ${PORT}..."
-node server.js &
+npx next start -p ${PORT} &
 APP_PID=$!
 
 # Give the app a moment to bind to the port
