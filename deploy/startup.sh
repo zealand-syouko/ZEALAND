@@ -9,4 +9,4 @@ echo "==> Seeding..."
 $BIN/prisma db seed 2>/dev/null || true
 
 echo "==> Starting app on port ${PORT}..."
-exec $BIN/next start -p ${PORT}
+exec $BIN/next start -H 0.0.0.0 -p ${PORT}
