@@ -36,7 +36,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-56 bg-white border-r min-h-screen p-4 flex flex-col">
+    <aside style={{ width: "14rem", minHeight: "100vh" }} className="bg-white border-r p-4 flex flex-col">
       <h1 className="text-lg font-bold mb-2">Token Relay</h1>
       {balance !== null && (
         <p className="text-xs text-gray-500 mb-4">
