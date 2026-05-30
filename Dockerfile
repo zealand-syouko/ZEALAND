@@ -1,5 +1,4 @@
-FROM node:22-slim AS base
-RUN apt-get update && apt-get install -y openssl libssl-dev && rm -rf /var/lib/apt/lists/*
+FROM node:20-bullseye-slim AS base
 WORKDIR /app
 
 FROM base AS deps
