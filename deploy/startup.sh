@@ -1,5 +1,5 @@
 #!/bin/sh
-export PORT=${PORT:-3000}
+export PORT=3000
 BIN="./node_modules/.bin"
 
 echo "==> Running migrations..."
