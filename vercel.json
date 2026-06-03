@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cp prisma/schema.pg.prisma prisma/schema.prisma && npx prisma generate && next build",
+  "installCommand": "npm install --legacy-peer-deps"
+}
