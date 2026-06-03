@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Token Relay — One API Key, All AI Models
 
-## Getting Started
+OpenAI-compatible API gateway for DeepSeek, GPT, Claude, and Gemini. **No credit card required.**
 
-First, run the development server:
+## Why Token Relay?
+
+- **One Key, All Models** — Single API key works across DeepSeek, GPT, Claude, Gemini
+- **No Credit Card** — Pay via Alipay/WeChat or manual transfer
+- **OpenAI Compatible** — Drop-in replacement. Works with any ChatGPT client or SDK
+- **Cheaper than Direct** — DeepSeek from $0.02/1M input tokens
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+curl https://zealand-delta.vercel.app/api/proxy \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-chat","messages":[{"role":"user","content":"Hello!"}]}'
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or with any OpenAI SDK:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```python
+from openai import OpenAI
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://zealand-delta.vercel.app/api/proxy"
+)
+response = client.chat.completions.create(
+    model="deepseek-chat",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Pricing
 
-## Learn More
+| Model | Input (per 1M tokens) | Output (per 1M tokens) |
+|-------|----------------------|------------------------|
+| DeepSeek Chat | $0.02 | $0.06 |
 
-To learn more about Next.js, take a look at the following resources:
+GPT, Claude, Gemini coming soon.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Get Started
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Register at [zealand-delta.vercel.app](https://zealand-delta.vercel.app)
+2. Create an API key
+3. Start calling the API
 
-## Deploy on Vercel
+## Self-Host
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git clone https://github.com/zealand-syouko/ZEALAND.git
+cd ZEALAND
+npm install
+npm run setup
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open http://localhost:3000, configure your LLM providers, and you have your own API gateway.
+
+## Tech Stack
+
+Next.js · TypeScript · Prisma · PostgreSQL · Tailwind CSS · Railway/Vercel
