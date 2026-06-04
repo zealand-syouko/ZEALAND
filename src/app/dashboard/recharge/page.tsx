@@ -14,7 +14,7 @@ const AMOUNTS = [
 
 const PAYMENT_INFO: Record<string, { label: string; address: string; note: string }> = {
   paypal: { label: "PayPal", address: "YOUR_PAYPAL_EMAIL@example.com", note: "Send payment to this PayPal address. Include your Order ID in the note." },
-  crypto: { label: "USDT (TRC20)", address: "YOUR_TRC20_WALLET_ADDRESS", note: "Send USDT via TRC20 network. Include Order ID in memo if available." },
+  crypto: { label: "USDT (TRC20)", address: "TQDUt3LZHfLjReiSd8ATsuNJLKQDDLuDvA", note: "Send USDT via TRC20 network. Include Order ID in memo if available." },
 };
 
 export default function RechargePage() {
