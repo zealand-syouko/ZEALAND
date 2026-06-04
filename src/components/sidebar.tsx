@@ -30,7 +30,10 @@ export function Sidebar() {
 
   useEffect(() => {
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance)).catch(() => {});
-    fetch("/api/admin/pending-count").then((r) => { if (r.ok) { r.json().then((d) => { setPending(d.count); setIsAdmin(true); }); } }).catch(() => {});
+    fetch("/api/auth/me").then((r) => r.json()).then((d) => {
+      if (d.email === "admin@tokenrelay.local") setIsAdmin(true);
+    }).catch(() => {});
+    fetch("/api/admin/pending-count").then((r) => { if (r.ok) r.json().then((d) => setPending(d.count)); }).catch(() => {});
   }, []);
 
   async function handleLogout() {
