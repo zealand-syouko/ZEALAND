@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "amount and method required" }, { status: 400 });
   }
 
-  if (!["alipay", "wechat", "manual"].includes(method)) {
+  if (!["alipay", "wechat", "manual", "crypto"].includes(method)) {
     return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
   }
 

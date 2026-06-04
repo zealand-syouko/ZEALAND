@@ -12,6 +12,7 @@ export function Sidebar() {
   const router = useRouter();
   const [balance, setBalance] = useState<number | null>(null);
   const [pending, setPending] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const links = [
     { href: "/dashboard", label: t("overview") },
@@ -29,7 +30,7 @@ export function Sidebar() {
 
   useEffect(() => {
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance)).catch(() => {});
-    fetch("/api/admin/pending-count").then((r) => r.json()).then((d) => setPending(d.count)).catch(() => {});
+    fetch("/api/admin/pending-count").then((r) => { if (r.ok) { r.json().then((d) => { setPending(d.count); setIsAdmin(true); }); } }).catch(() => {});
   }, []);
 
   async function handleLogout() {
@@ -54,6 +55,7 @@ export function Sidebar() {
           </Link>
         ))}
 
+        {isAdmin && (
         <div className="pt-4 mt-2 border-t">
           <p className="px-3 text-xs text-gray-400 uppercase mb-1">{t("admin")}</p>
           {adminLinks.map((link) => (
@@ -63,6 +65,7 @@ export function Sidebar() {
             </Link>
           ))}
         </div>
+        )}
       </nav>
 
       <div className="pt-2 border-t">
