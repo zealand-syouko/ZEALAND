@@ -94,7 +94,7 @@ function LoginForm() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button type="submit" disabled={loading} className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800 disabled:opacity-50">{loading ? t("signingIn") : t("signIn")}</button>
           <p className="text-sm text-center text-gray-500">{t("noAccount")} <Link href="/register" className="text-blue-600 hover:underline">{t("register")}</Link></p>
-          <p className="text-xs text-center text-gray-400">Forgot password? Contact tokenrelay@proton.me</p>
+          <p className="text-xs text-center text-gray-400"><Link href="/forgot-password" className="underline">Forgot password?</Link></p>
           <div className="flex justify-center pt-2 border-t"><LanguageSwitcher /></div>
         </form>
       </div>
