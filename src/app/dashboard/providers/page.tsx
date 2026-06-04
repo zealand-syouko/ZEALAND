@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { AdminGuard } from "@/components/admin-guard";
 
 interface Provider { id: string; name: string; apiKeyPreview: string; baseUrl: string | null; isEnabled: boolean; }
 
@@ -25,6 +26,7 @@ export default function ProvidersPage() {
   async function handleToggle(p: Provider) { await fetch("/api/providers", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: p.name, apiKey: "", isEnabled: !p.isEnabled }) }); fetchProviders(); }
 
   return (
+    <AdminGuard>
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("title")}</h2>
       <div className="space-y-4">
@@ -56,5 +58,6 @@ export default function ProvidersPage() {
         ))}
       </div>
     </div>
+    </AdminGuard>
   );
 }

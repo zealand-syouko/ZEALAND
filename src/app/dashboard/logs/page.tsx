@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { AdminGuard } from "@/components/admin-guard";
 
 interface LogEntry { id: string; provider: string; model: string; endpoint: string; requestTokens: number; responseTokens: number; totalTokens: number; latencyMs: number; status: number; errorMessage: string | null; createdAt: string; }
 
@@ -21,6 +22,7 @@ export default function LogsPage() {
   useEffect(() => { fetchLogs(); }, [fetchLogs]);
 
   return (
+    <AdminGuard>
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("title")}</h2>
       <div className="flex gap-4">
@@ -59,5 +61,6 @@ export default function LogsPage() {
       </div>
       <p className="text-sm text-gray-400">{t("totalRecords", { count: data.total })}</p>
     </div>
+    </AdminGuard>
   );
 }
