@@ -23,11 +23,14 @@ export function Sidebar() {
   const adminLinks = [
     { href: "/dashboard/admin/pricing", label: t("pricing") },
     { href: "/dashboard/admin/users", label: t("users") },
-    { href: "/dashboard/admin/orders", label: t("orders") },
+    { href: "/dashboard/admin/orders", label: t("orders") + (pending > 0 ? ` (${pending})` : "") },
   ];
+
+  const [pending, setPending] = useState(0);
 
   useEffect(() => {
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance)).catch(() => {});
+    fetch("/api/admin/pending-count").then((r) => r.json()).then((d) => setPending(d.count)).catch(() => {});
   }, []);
 
   async function handleLogout() {

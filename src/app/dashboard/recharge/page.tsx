@@ -13,7 +13,6 @@ const AMOUNTS = [
 ];
 
 const PAYMENT_INFO: Record<string, { label: string; address: string; note: string }> = {
-  paypal: { label: "PayPal", address: "YOUR_PAYPAL_EMAIL@example.com", note: "Send payment to this PayPal address. Include your Order ID in the note." },
   crypto: { label: "USDT (TRC20)", address: "TQDUt3LZHfLjReiSd8ATsuNJLKQDDLuDvA", note: "Send USDT via TRC20 network. Include Order ID in memo if available." },
 };
 
@@ -21,7 +20,7 @@ export default function RechargePage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [amount, setAmount] = useState(5000);
   const [customAmount, setCustomAmount] = useState("");
-  const [method, setMethod] = useState("paypal");
+  const [method, setMethod] = useState("crypto");
   const [creating, setCreating] = useState(false);
   const [msg, setMsg] = useState("");
   const [activeOrder, setActiveOrder] = useState<string | null>(null);
@@ -97,7 +96,7 @@ export default function RechargePage() {
         <div>
           <label className="block text-sm text-gray-500 mb-2">Payment Method</label>
           <div className="flex gap-2">
-            {[{ key: "paypal", label: "PayPal" }, { key: "crypto", label: "Crypto (USDT)" }].map((m) => (
+            {[{ key: "crypto", label: "USDT (TRC20)" }].map((m) => (
               <button key={m.key} onClick={() => setMethod(m.key)}
                 className={`py-2 px-4 rounded border text-sm ${method === m.key ? "bg-black text-white border-black" : "bg-white hover:bg-gray-50"}`}>
                 {m.label}

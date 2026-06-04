@@ -33,13 +33,23 @@ function LoginForm() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero */}
       <div className="max-w-4xl mx-auto px-6 pt-20 pb-12 text-center">
-        <h1 className="text-5xl font-bold mb-4">Token Relay</h1>
-        <p className="text-xl text-gray-600 mb-2">One API Key, All AI Models</p>
-        <p className="text-gray-500 mb-8">DeepSeek · GPT · Claude · Gemini. No credit card needed.</p>
+        <h1 className="text-5xl font-bold mb-4">Cheap DeepSeek API Access</h1>
+        <p className="text-xl text-gray-600 mb-2">OpenAI-compatible. No credit card. No phone verification. Just works.</p>
+        <p className="text-gray-500 mb-8">GPT &amp; Claude coming soon. Pay with USDT.</p>
 
         <div className="flex justify-center gap-4 mb-12">
-          <Link href="/register" className="rounded-full bg-black px-8 py-3 text-white font-medium hover:bg-gray-800">Get Started Free</Link>
+          <Link href="/register" className="rounded-full bg-black px-8 py-3 text-white font-medium hover:bg-gray-800">Get API Key</Link>
           <a href="#pricing" className="rounded-full border px-8 py-3 font-medium hover:bg-gray-50">View Pricing</a>
+        </div>
+      </div>
+
+      {/* Why */}
+      <div className="max-w-4xl mx-auto px-6 pb-20">
+        <h2 className="text-3xl font-bold text-center mb-10">Why Token Relay?</h2>
+        <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
+          <div className="text-center"><p className="text-3xl mb-2">🔑</p><h3 className="font-bold">No Credit Card</h3><p className="text-sm text-gray-500 mt-1">Pay with USDT. No KYC. No bank verification.</p></div>
+          <div className="text-center"><p className="text-3xl mb-2">⚡</p><h3 className="font-bold">OpenAI Format</h3><p className="text-sm text-gray-500 mt-1">Drop-in replacement. Works with any ChatGPT client or SDK.</p></div>
+          <div className="text-center"><p className="text-3xl mb-2">💰</p><h3 className="font-bold">80% Cheaper</h3><p className="text-sm text-gray-500 mt-1">$0.02 input / $0.06 output per 1M tokens. No hidden fees.</p></div>
         </div>
       </div>
 
@@ -47,16 +57,17 @@ function LoginForm() {
       <div id="pricing" className="max-w-4xl mx-auto px-6 pb-20">
         <h2 className="text-3xl font-bold text-center mb-10">Pricing</h2>
         <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
-          <div className="rounded-xl bg-white p-6 shadow text-center">
+          <div className="rounded-xl bg-white p-6 shadow text-center ring-2 ring-black">
             <h3 className="font-bold text-lg mb-1">DeepSeek Chat</h3>
             <p className="text-sm text-gray-500 mb-3">deepseek-chat / deepseek-reasoner</p>
-            <p className="text-3xl font-bold">$0.06<span className="text-sm text-gray-400">/1M tokens</span></p>
-            <p className="text-xs text-gray-400 mt-1">output</p>
+            <div className="space-y-1 mb-3"><p className="text-sm text-gray-500">Input: <span className="font-bold text-black">$0.02</span> / 1M tokens</p><p className="text-sm text-gray-500">Output: <span className="font-bold text-black">$0.06</span> / 1M tokens</p></div>
+            <p className="text-xs text-green-600 font-medium">Same price as official API</p>
           </div>
           <div className="rounded-xl bg-white p-6 shadow text-center">
-            <h3 className="font-bold text-lg mb-1">GPT / Claude</h3>
+            <h3 className="font-bold text-lg mb-1">GPT-4o / Claude</h3>
             <p className="text-sm text-gray-500 mb-3">Coming soon</p>
-            <p className="text-3xl font-bold">—</p>
+            <p className="text-3xl font-bold text-gray-300">—</p>
+            <p className="text-xs text-gray-400 mt-1">Join waitlist for early access</p>
           </div>
         </div>
       </div>
@@ -87,7 +98,11 @@ function LoginForm() {
         </form>
       </div>
 
-      <footer className="text-center pb-8 text-sm text-gray-400">Token Relay &copy; 2026</footer>
+      <footer className="text-center pb-8 text-sm text-gray-400 space-y-1">
+        <p>Token Relay &copy; 2026</p>
+        <p>Contact: tokenrelay@proton.me &middot; <Link href="/terms" className="underline">Terms of Service</Link></p>
+        <p className="text-xs">This is an independent API proxy service. We are not affiliated with DeepSeek, OpenAI, Anthropic, or Google.</p>
+      </footer>
     </div>
   );
 }
