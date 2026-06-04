@@ -28,7 +28,7 @@ export default function AdminPricingPage() {
         <button onClick={handleSave} disabled={saving} className="rounded bg-black px-4 py-2 text-sm text-white hover:bg-gray-800 disabled:opacity-50">{saving ? t("saving") : t("save")}</button>
       </div>
       <div className="rounded-xl bg-white shadow overflow-hidden">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm" suppressHydrationWarning>
           <thead><tr className="text-left text-gray-500 border-b"><th className="px-4 py-3">{t("model")}</th><th className="px-4 py-3">{t("inputPerM")}</th><th className="px-4 py-3">{t("outputPerM")}</th><th className="px-4 py-3">{t("actions")}</th></tr></thead>
           <tbody>
             {pricing.map((p) => (

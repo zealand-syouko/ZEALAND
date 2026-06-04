@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface Stats {
   today: { calls: number; tokens: number };
@@ -13,16 +14,20 @@ interface Stats {
   transactions: { amount: number; type: string; description: string; createdAt: string }[];
 }
 
+interface Revenue { revenue: { today: number; week: number; month: number; total: number; totalTopUps: number }; users: number; pendingOrders: number; }
+
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
   const [stats, setStats] = useState<Stats | null>(null);
   const [balance, setBalance] = useState<number>(0);
+  const [rev, setRev] = useState<Revenue | null>(null);
 
   useEffect(() => {
     fetch("/api/dashboard/stats").then((r) => r.json()).then(setStats);
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance));
+    fetch("/api/admin/revenue").then((r) => r.json()).then(setRev);
   }, []);
 
   if (!stats) return <p>{t("loading")}</p>;
@@ -31,13 +36,27 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("overview")}</h2>
 
-      <div className="grid grid-cols-5 gap-4">
+      {rev && rev.pendingOrders > 0 && (
+        <Link href="/dashboard/admin/orders" className="block rounded-xl bg-yellow-50 border border-yellow-300 p-4 hover:bg-yellow-100">
+          <p className="font-bold text-yellow-800">{rev.pendingOrders} pending order{rev.pendingOrders > 1 ? 's' : ''} — click to confirm</p>
+        </Link>
+      )}
+
+      <div className="grid grid-cols-4 gap-4">
         <StatCard label={t("balance")} value={balance.toLocaleString()} highlight />
         <StatCard label={t("todayCalls")} value={stats.today.calls.toLocaleString()} />
         <StatCard label={t("todayTokens")} value={stats.today.tokens.toLocaleString()} />
-        <StatCard label={t("weekCalls")} value={stats.week.calls.toLocaleString()} />
         <StatCard label={t("activeKeys")} value={`${stats.activeKeys}/${stats.totalKeys}`} />
       </div>
+
+      {rev && (
+        <div className="grid grid-cols-4 gap-4">
+          <StatCard label="Revenue Today" value={`$${(rev.revenue.today / 100).toFixed(2)}`} />
+          <StatCard label="Revenue This Week" value={`$${(rev.revenue.week / 100).toFixed(2)}`} />
+          <StatCard label="Revenue This Month" value={`$${(rev.revenue.month / 100).toFixed(2)}`} />
+          <StatCard label="Total Users" value={rev.users.toString()} />
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-6">
         <div className="rounded-xl bg-white p-6 shadow">

@@ -60,8 +60,8 @@ function LoginForm() {
           <div className="rounded-xl bg-white p-6 shadow text-center ring-2 ring-black">
             <h3 className="font-bold text-lg mb-1">DeepSeek Chat</h3>
             <p className="text-sm text-gray-500 mb-3">deepseek-chat / deepseek-reasoner</p>
-            <div className="space-y-1 mb-3"><p className="text-sm text-gray-500">Input: <span className="font-bold text-black">$0.02</span> / 1M tokens</p><p className="text-sm text-gray-500">Output: <span className="font-bold text-black">$0.06</span> / 1M tokens</p></div>
-            <p className="text-xs text-green-600 font-medium">Same price as official API</p>
+            <p className="text-3xl font-bold">$0.50<span className="text-sm text-gray-400">/1M tokens</span></p>
+            <p className="text-xs text-gray-400 mt-2">Flat rate. No separate input/output pricing.</p>
           </div>
           <div className="rounded-xl bg-white p-6 shadow text-center">
             <h3 className="font-bold text-lg mb-1">GPT-4o / Claude</h3>
@@ -94,13 +94,14 @@ function LoginForm() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button type="submit" disabled={loading} className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800 disabled:opacity-50">{loading ? t("signingIn") : t("signIn")}</button>
           <p className="text-sm text-center text-gray-500">{t("noAccount")} <Link href="/register" className="text-blue-600 hover:underline">{t("register")}</Link></p>
+          <p className="text-xs text-center text-gray-400">Forgot password? Contact tokenrelay@proton.me</p>
           <div className="flex justify-center pt-2 border-t"><LanguageSwitcher /></div>
         </form>
       </div>
 
       <footer className="text-center pb-8 text-sm text-gray-400 space-y-1">
         <p>Token Relay &copy; 2026</p>
-        <p>Contact: tokenrelay@proton.me &middot; <Link href="/terms" className="underline">Terms of Service</Link></p>
+        <p><Link href="/docs" className="underline">API Docs</Link> &middot; <Link href="/terms" className="underline">Terms of Service</Link> &middot; tokenrelay@proton.me</p>
         <p className="text-xs">This is an independent API proxy service. We are not affiliated with DeepSeek, OpenAI, Anthropic, or Google.</p>
       </footer>
     </div>

@@ -11,6 +11,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [balance, setBalance] = useState<number | null>(null);
+  const [pending, setPending] = useState(0);
 
   const links = [
     { href: "/dashboard", label: t("overview") },
@@ -25,8 +26,6 @@ export function Sidebar() {
     { href: "/dashboard/admin/users", label: t("users") },
     { href: "/dashboard/admin/orders", label: t("orders") + (pending > 0 ? ` (${pending})` : "") },
   ];
-
-  const [pending, setPending] = useState(0);
 
   useEffect(() => {
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance)).catch(() => {});

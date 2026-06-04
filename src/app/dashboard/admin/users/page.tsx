@@ -26,6 +26,33 @@ export default function AdminUsersPage() {
         <div><label className="block text-sm text-gray-500 mb-1">{t("note")}</label><input value={topUpDesc} onChange={(e) => setTopUpDesc(e.target.value)} placeholder="WeChat top-up" className="rounded border px-3 py-2 text-sm w-40" /></div>
         <button onClick={handleTopUp} disabled={topping} className="rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-50">{topping ? t("processing") : t("topUp")}</button>
       </div>
+
+      {/* Password Reset */}
+      <div className="rounded-xl bg-gray-50 p-4 space-y-2 max-w-md">
+        <h3 className="font-bold text-sm">Reset User Password</h3>
+        <div className="flex gap-2 items-end">
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">User</label>
+            <select id="resetUser" className="rounded border px-3 py-2 text-sm w-full">
+              <option value="">Select user...</option>
+              {users.map((u) => (<option key={u.id} value={u.id}>{u.email}</option>))}
+            </select>
+          </div>
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">New Password</label>
+            <input id="resetPass" type="text" placeholder="6+ chars" className="rounded border px-3 py-2 text-sm w-full" />
+          </div>
+          <button onClick={async () => {
+            const uid = (document.getElementById("resetUser") as HTMLSelectElement).value;
+            const pw = (document.getElementById("resetPass") as HTMLInputElement).value;
+            if (!uid || !pw) return alert("Select user and enter new password");
+            await fetch("/api/admin/reset-password", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: uid, newPassword: pw }) });
+            alert("Password reset!");
+            (document.getElementById("resetPass") as HTMLInputElement).value = "";
+          }} className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:bg-orange-600">Reset</button>
+        </div>
+      </div>
+
       <div className="rounded-xl bg-white shadow overflow-hidden">
         <table className="w-full text-sm">
           <thead><tr className="text-left text-gray-500 border-b"><th className="px-4 py-3">{t("email")}</th><th className="px-4 py-3">{t("balance")}</th><th className="px-4 py-3">{t("registered")}</th></tr></thead>
