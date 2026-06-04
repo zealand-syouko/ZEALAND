@@ -4,12 +4,12 @@ import { getAllOrders, confirmOrder, getOrderById } from "@/server/db/orders";
 import { topUpBalance } from "@/server/billing";
 
 export async function GET() {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   return NextResponse.json(await getAllOrders());
 }
 
 export async function POST(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { orderId, action } = await req.json();
 
   if (action === "confirm") {

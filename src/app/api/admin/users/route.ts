@@ -5,7 +5,7 @@ import { topUpBalance } from "@/server/billing";
 import { getUserTransactions } from "@/server/db/transactions";
 
 export async function GET() {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const users = await prisma.user.findMany({
     select: { id: true, email: true, balance: true, createdAt: true },
     orderBy: { createdAt: "desc" },
@@ -14,7 +14,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { userId, amount, description } = await req.json();
   if (!userId || !amount || amount <= 0) {
     return NextResponse.json({ error: "userId and positive amount required" }, { status: 400 });

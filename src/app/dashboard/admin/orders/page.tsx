@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { AdminGuard } from "@/components/admin-guard";
 
 interface Order { id: string; userId: string; user: { email: string }; amount: number; method: string; status: string; tradeNo: string | null; paidAt: string | null; createdAt: string; }
 
@@ -24,6 +25,7 @@ export default function AdminOrdersPage() {
   }
 
   return (
+    <AdminGuard>
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Payment Orders</h2>
       <p className="text-sm text-gray-500">Review and confirm user top-up orders. Click Confirm to credit the user balance.</p>
@@ -56,5 +58,6 @@ export default function AdminOrdersPage() {
         </table>
       </div>
     </div>
+    </AdminGuard>
   );
 }

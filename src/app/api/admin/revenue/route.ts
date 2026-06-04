@@ -3,7 +3,7 @@ import { requireAdmin } from "@/server/auth/session";
 import { prisma } from "@/server/db/client";
 
 export async function GET() {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());

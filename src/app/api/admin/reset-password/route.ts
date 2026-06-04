@@ -4,7 +4,7 @@ import { prisma } from "@/server/db/client";
 import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { userId, newPassword } = await req.json();
 
   if (!userId || !newPassword || newPassword.length < 6) {

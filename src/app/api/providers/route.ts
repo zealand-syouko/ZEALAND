@@ -5,7 +5,7 @@ import { encrypt } from "@/server/encryption";
 import type { ProviderName } from "@/server/types";
 
 export async function GET() {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const providers = await getAllProviders();
   return NextResponse.json(providers.map((p) => ({
     id: p.id,
@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { name, apiKey, baseUrl, isEnabled } = await req.json();
   if (apiKey) {
     const encryptionKey = process.env.ENCRYPTION_KEY!;

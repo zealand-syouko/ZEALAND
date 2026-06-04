@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { AdminGuard } from "@/components/admin-guard";
 
 interface Pricing { id: string; model: string; inputPrice: number; outputPrice: number; unit: number; }
 
@@ -18,6 +19,7 @@ export default function AdminPricingPage() {
   async function handleDelete(m: string) { await fetch("/api/admin/pricing", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: m }) }); fetchPricing(); }
 
   return (
+    <AdminGuard>
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("title")}</h2>
       <p className="text-sm text-gray-500">{t("desc")}</p>
@@ -44,5 +46,6 @@ export default function AdminPricingPage() {
         </table>
       </div>
     </div>
+    </AdminGuard>
   );
 }

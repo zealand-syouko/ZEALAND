@@ -5,7 +5,8 @@ import { getApiKeysByUser } from "@/server/db/api-keys";
 import { getUserTransactions } from "@/server/db/transactions";
 
 export async function GET() {
-  const session = await requireAdmin();
+  const session = await requireAdmin(); if (session instanceof NextResponse) return session;
+  if (session instanceof NextResponse) return session;
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());

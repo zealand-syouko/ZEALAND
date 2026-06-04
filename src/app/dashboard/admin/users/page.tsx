@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { AdminGuard } from "@/components/admin-guard";
 
 interface User { id: string; email: string; balance: number; createdAt: string; }
 
@@ -17,6 +18,7 @@ export default function AdminUsersPage() {
   async function handleTopUp() { if (!topUpUserId || !topUpAmount) return; setTopping(true); await fetch("/api/admin/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: topUpUserId, amount: Number(topUpAmount), description: topUpDesc || "Admin top-up" }) }); setTopUpAmount(""); setTopUpDesc(""); setTopping(false); fetchUsers(); }
 
   return (
+    <AdminGuard>
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("title")}</h2>
       <p className="text-sm text-gray-500">{t("desc")}</p>
@@ -60,5 +62,6 @@ export default function AdminUsersPage() {
         </table>
       </div>
     </div>
+    </AdminGuard>
   );
 }

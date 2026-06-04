@@ -3,12 +3,12 @@ import { requireAdmin } from "@/server/auth/session";
 import { getAllPricing, upsertPricing, deletePricing } from "@/server/db/pricing";
 
 export async function GET() {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   return NextResponse.json(await getAllPricing());
 }
 
 export async function POST(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { model, inputPrice, outputPrice } = await req.json();
   if (!model || inputPrice == null || outputPrice == null) {
     return NextResponse.json({ error: "model, inputPrice, outputPrice required" }, { status: 400 });
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { model } = await req.json();
   await deletePricing(model);
   return NextResponse.json({ success: true });

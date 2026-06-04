@@ -3,7 +3,7 @@ import { requireAdmin } from "@/server/auth/session";
 import { queryCallLogs } from "@/server/db/logs";
 
 export async function GET(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const params = req.nextUrl.searchParams;
   const result = await queryCallLogs({
     apiKeyId: params.get("apiKeyId") || undefined,

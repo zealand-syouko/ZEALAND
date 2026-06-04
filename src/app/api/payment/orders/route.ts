@@ -3,13 +3,15 @@ import { requireAdmin } from "@/server/auth/session";
 import { createOrder, getUserOrders } from "@/server/db/orders";
 
 export async function GET() {
-  const session = await requireAdmin();
+  const session = await requireAdmin(); if (session instanceof NextResponse) return session;
+  if (session instanceof NextResponse) return session;
   const orders = await getUserOrders(session.userId!);
   return NextResponse.json(orders);
 }
 
 export async function POST(req: NextRequest) {
-  const session = await requireAdmin();
+  const session = await requireAdmin(); if (session instanceof NextResponse) return session;
+  if (session instanceof NextResponse) return session;
   const { amount, method } = await req.json();
 
   if (!amount || amount <= 0 || !method) {

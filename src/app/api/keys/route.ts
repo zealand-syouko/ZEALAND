@@ -11,7 +11,8 @@ function generateApiKey(): { raw: string; prefix: string; hash: string } {
 }
 
 export async function GET() {
-  const session = await requireAdmin();
+  const session = await requireAdmin(); if (session instanceof NextResponse) return session;
+  if (session instanceof NextResponse) return session;
   const keys = await getApiKeysByUser(session.userId!);
   return NextResponse.json(keys.map((k) => ({
     id: k.id,
@@ -26,7 +27,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await requireAdmin();
+  const session = await requireAdmin(); if (session instanceof NextResponse) return session;
+  if (session instanceof NextResponse) return session;
   const { name, totalQuota, expiresAt } = await req.json();
   const { raw, prefix, hash } = generateApiKey();
 
@@ -43,14 +45,14 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { id, name, isActive, totalQuota, expiresAt } = await req.json();
   await updateApiKey(id, { name, isActive, totalQuota, expiresAt: expiresAt ? new Date(expiresAt) : undefined });
   return NextResponse.json({ success: true });
 }
 
 export async function DELETE(req: NextRequest) {
-  await requireAdmin();
+  const _auth = await requireAdmin(); if (_auth instanceof NextResponse) return _auth;
   const { id } = await req.json();
   await deleteApiKey(id);
   return NextResponse.json({ success: true });

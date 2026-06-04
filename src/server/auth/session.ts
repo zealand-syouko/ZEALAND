@@ -1,5 +1,6 @@
 import { getIronSession, SessionOptions } from "iron-session";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export interface SessionData {
   userId?: string;
@@ -21,10 +22,11 @@ export async function getSession() {
   return getIronSession<SessionData>(cookieStore, sessionOptions);
 }
 
+const UNAUTHORIZED = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
 export async function requireAdmin() {
   const session = await getSession();
-  if (!session.userId) {
-    throw new Error("Unauthorized");
-  }
+  if (!session.userId) return UNAUTHORIZED;
   return session;
 }
+
