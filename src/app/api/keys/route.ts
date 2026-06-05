@@ -12,7 +12,6 @@ function generateApiKey(): { raw: string; prefix: string; hash: string } {
 
 export async function GET() {
   const session = await requireAdmin(); if (session instanceof NextResponse) return session;
-  if (session instanceof NextResponse) return session;
   const keys = await getApiKeysByUser(session.userId!);
   return NextResponse.json(keys.map((k) => ({
     id: k.id,
@@ -28,7 +27,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const session = await requireAdmin(); if (session instanceof NextResponse) return session;
-  if (session instanceof NextResponse) return session;
+  // Check verified
+  const { prisma: p } = await import("@/server/db/client");
+  const user = await p.user.findUnique({ where: { id: session.userId! } });
+  if (!user?.verified) return NextResponse.json({ error: "Please verify your email first" }, { status: 403 });
   const { name, totalQuota, expiresAt } = await req.json();
   const { raw, prefix, hash } = generateApiKey();
 

@@ -36,7 +36,7 @@ export default function RegisterPage() {
           <p className="text-sm text-gray-500">Save this recovery code — you will need it to reset your password:</p>
           <div className="rounded-lg bg-yellow-50 border border-yellow-300 p-4 font-mono text-lg font-bold break-all select-all">{recoveryCode}</div>
           <p className="text-xs text-red-500">Copy it now. It will NOT be shown again.</p>
-          <button onClick={() => router.push("/?registered=1")} className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800">I&apos;ve saved it — Go to Login</button>
+          <button onClick={() => router.push("/verify")} className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800">I&apos;ve saved it — Verify Email</button>
         </div>
       </div>
     );
