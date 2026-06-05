@@ -6,5 +6,6 @@ export async function GET() {
   if (!session.userId) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
-  return NextResponse.json({ authenticated: true, email: session.email });
+  const isAdmin = session.email === process.env.DEFAULT_ADMIN_EMAIL;
+  return NextResponse.json({ authenticated: true, email: session.email, isAdmin });
 }
