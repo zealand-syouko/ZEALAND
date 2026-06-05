@@ -29,6 +29,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Balance check
+  const { prisma: prisma2 } = await import("@/server/db/client");
+  const user = await prisma2.user.findUnique({ where: { id: auth.apiKey.userId } });
+  if (user && user.balance <= 0) {
+    return NextResponse.json(
+      { error: { message: "Insufficient balance. Please recharge.", type: "insufficient_balance" } },
+      { status: 402 },
+    );
+  }
+
   // 2. Parse body
   const body: OpenAIChatRequest = await req.json();
   if (!body.model) {

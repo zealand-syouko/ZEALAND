@@ -38,6 +38,17 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("overview")}</h2>
 
+      {balance === 0 && (
+        <div className="rounded-xl bg-red-50 border border-red-300 p-4">
+          <p className="font-bold text-red-800">Your balance is $0. API calls will be rejected. <Link href="/dashboard/recharge" className="underline">Recharge now</Link>.</p>
+        </div>
+      )}
+      {balance > 0 && balance < 100 && (
+        <div className="rounded-xl bg-yellow-50 border border-yellow-300 p-4">
+          <p className="font-bold text-yellow-800">Low balance ({balance} cents). <Link href="/dashboard/recharge" className="underline">Recharge</Link> to avoid interruption.</p>
+        </div>
+      )}
+
       {rev && rev.pendingOrders > 0 && (
         <Link href="/dashboard/admin/orders" className="block rounded-xl bg-yellow-50 border border-yellow-300 p-4 hover:bg-yellow-100">
           <p className="font-bold text-yellow-800">{rev.pendingOrders} pending order{rev.pendingOrders > 1 ? 's' : ''} — click to confirm</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -15,6 +15,13 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/dashboard/public-stats").then(r => r.json()).then(d => {
+      document.getElementById("pub-users")!.textContent = d.totalUsers + " users";
+      document.getElementById("pub-tokens")!.textContent = (d.totalTokens / 1000000).toFixed(1) + "M tokens served";
+    }).catch(() => {});
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -36,6 +43,10 @@ function LoginForm() {
         <h1 className="text-5xl font-bold mb-4">Cheap DeepSeek API Access</h1>
         <p className="text-xl text-gray-600 mb-2">OpenAI-compatible. No credit card. No phone verification. Just works.</p>
         <p className="text-gray-500 mb-8">GPT &amp; Claude coming soon. Pay with USDT.</p>
+
+        <div className="flex justify-center gap-8 mb-12 text-sm text-gray-500">
+            <span id="pub-users">... users</span> &middot; <span id="pub-tokens">... tokens served</span>
+          </div>
 
         <div className="flex justify-center gap-4 mb-12">
           <Link href="/register" className="rounded-full bg-black px-8 py-3 text-white font-medium hover:bg-gray-800">Get API Key</Link>
@@ -60,8 +71,8 @@ function LoginForm() {
           <div className="rounded-xl bg-white p-6 shadow text-center ring-2 ring-black">
             <h3 className="font-bold text-lg mb-1">DeepSeek Chat</h3>
             <p className="text-sm text-gray-500 mb-3">deepseek-chat / deepseek-reasoner</p>
-            <p className="text-3xl font-bold">$0.50<span className="text-sm text-gray-400">/1M tokens</span></p>
-            <p className="text-xs text-gray-400 mt-2">Flat rate. No separate input/output pricing.</p>
+              <p className="text-3xl font-bold">$0.20 / $0.60<span className="text-sm text-gray-400">/1M tokens</span></p>
+            <p className="text-xs text-gray-400 mt-2">Input / Output. Same as official API.</p>
           </div>
           <div className="rounded-xl bg-white p-6 shadow text-center">
             <h3 className="font-bold text-lg mb-1">GPT-4o / Claude</h3>
@@ -101,7 +112,7 @@ function LoginForm() {
 
       <footer className="text-center pb-8 text-sm text-gray-400 space-y-1">
         <p>Token Relay &copy; 2026</p>
-        <p><Link href="/docs" className="underline">API Docs</Link> &middot; <Link href="/terms" className="underline">Terms of Service</Link> &middot; tokenrelay@proton.me</p>
+        <p><Link href="/docs" className="underline">API Docs</Link> &middot; <Link href="/faq" className="underline">FAQ</Link> &middot; <Link href="/terms" className="underline">Terms</Link> &middot; tokenrelay@proton.me</p>
         <p className="text-xs">This is an independent API proxy service. We are not affiliated with DeepSeek, OpenAI, Anthropic, or Google.</p>
       </footer>
     </div>
