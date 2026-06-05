@@ -16,21 +16,22 @@ export async function POST(req: NextRequest) {
     const newCode = randomBytes(4).toString("hex").slice(0, 6);
     await prisma.user.update({ where: { id: user.id }, data: { verificationCode: newCode } });
 
-    // If Resend is configured, send email
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const { Resend } = await import("resend");
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: "Token Relay <noreply@zealandr.xyz>",
-          to: email,
-          subject: "Verify your email",
-          text: `Your verification code is: ${newCode}`,
-        });
-      } catch (e) { /* email fail silent */ }
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json({ error: "Email service not configured" }, { status: 503 });
     }
 
-    return NextResponse.json({ code: newCode, note: process.env.RESEND_API_KEY ? "Email sent" : "Check response for code" });
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    try {
+      await resend.emails.send({
+        from: "Token Relay <noreply@zealandr.xyz>",
+        to: email,
+        subject: "Verify your email",
+        text: `Your verification code is: ${newCode}`,
+      });
+    } catch (e) { return NextResponse.json({ error: "Failed to send email" }, { status: 500 }); }
+
+    return NextResponse.json({ message: "Verification code sent to your email" });
   }
 
   // Confirm code

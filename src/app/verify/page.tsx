@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function VerifyPage() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
-  const [displayCode, setDisplayCode] = useState("");
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -19,12 +18,7 @@ export default function VerifyPage() {
     const res = await fetch("/api/auth/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
     const data = await res.json();
     setLoading(false);
-    if (data.code) {
-      setDisplayCode(data.code);
-      setMsg("Verification code: " + data.code + (data.note ? " (" + data.note + ")" : ""));
-    } else {
-      setMsg(data.message || data.error || "Error");
-    }
+    setMsg(data.message || data.error || "Error");
   }
 
   async function handleConfirm() {
@@ -60,7 +54,7 @@ export default function VerifyPage() {
         <h1 className="text-2xl font-bold text-center">Verify Email</h1>
         <p className="text-sm text-gray-500 text-center">Enter your email to receive a verification code.</p>
 
-        {msg && <p className={`text-sm text-center py-2 rounded ${verified ? "bg-green-50 text-green-600" : displayCode ? "bg-yellow-50 text-yellow-800" : "bg-red-50 text-red-600"}`}>{msg}</p>}
+        {msg && <p className="text-sm text-center py-2 rounded bg-blue-50 text-blue-800">{msg}</p>}
 
         <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full rounded border px-3 py-2" />
         <button onClick={handleSend} disabled={loading} className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800 disabled:opacity-50">
