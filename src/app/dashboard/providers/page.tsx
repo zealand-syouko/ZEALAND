@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { AdminGuard } from "@/components/admin-guard";
 
 interface Provider { id: string; name: string; apiKeyPreview: string; baseUrl: string | null; isEnabled: boolean; }
 

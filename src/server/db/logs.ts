@@ -19,6 +19,7 @@ export async function createCallLog(input: CreateLogInput) {
 
 export interface LogQuery {
   apiKeyId?: string;
+  userId?: string;
   provider?: string;
   status?: number;
   startDate?: Date;
@@ -30,6 +31,12 @@ export interface LogQuery {
 export async function queryCallLogs(query: LogQuery) {
   const where: Record<string, unknown> = {};
   if (query.apiKeyId) where.apiKeyId = query.apiKeyId;
+  if (query.userId) {
+    // Find all keys for this user and filter by them
+    const { prisma: p } = await import("./client");
+    const keys = await p.apiKey.findMany({ where: { userId: query.userId }, select: { id: true } });
+    where.apiKeyId = { in: keys.map((k: { id: string }) => k.id) };
+  }
   if (query.provider) where.provider = query.provider;
   if (query.status) where.status = query.status;
   if (query.startDate || query.endDate) {

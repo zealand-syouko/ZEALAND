@@ -23,11 +23,13 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [balance, setBalance] = useState<number>(0);
   const [rev, setRev] = useState<Revenue | null>(null);
+  const [pubStats, setPubStats] = useState<{ totalUsers: number; totalTokens: number } | null>(null);
 
   useEffect(() => {
     fetch("/api/dashboard/stats").then((r) => r.json()).then(setStats);
     fetch("/api/dashboard/balance").then((r) => r.json()).then((d) => setBalance(d.balance));
-    fetch("/api/admin/revenue").then((r) => r.json()).then(setRev);
+    fetch("/api/admin/revenue").then((r) => { if (r.ok) r.json().then(setRev); }).catch(() => {});
+    fetch("/api/dashboard/public-stats").then((r) => r.json()).then(setPubStats);
   }, []);
 
   if (!stats) return <p>{t("loading")}</p>;
@@ -40,6 +42,13 @@ export default function DashboardPage() {
         <Link href="/dashboard/admin/orders" className="block rounded-xl bg-yellow-50 border border-yellow-300 p-4 hover:bg-yellow-100">
           <p className="font-bold text-yellow-800">{rev.pendingOrders} pending order{rev.pendingOrders > 1 ? 's' : ''} — click to confirm</p>
         </Link>
+      )}
+
+      {pubStats && (
+        <div className="grid grid-cols-2 gap-4">
+          <StatCard label="Total Users" value={pubStats.totalUsers.toLocaleString()} />
+          <StatCard label="Total Tokens Served" value={pubStats.totalTokens.toLocaleString()} />
+        </div>
       )}
 
       <div className="grid grid-cols-4 gap-4">
