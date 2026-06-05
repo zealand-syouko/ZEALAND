@@ -46,7 +46,7 @@ export function Sidebar() {
       <h1 className="text-lg font-bold mb-2">Token Relay</h1>
       {balance !== null && (
         <p className="text-xs text-gray-500 mb-4">
-          {t("balance")}: <span className="font-bold text-black">{balance.toLocaleString()}</span> {t("cents")}
+          {t("balance")}: <span className="font-bold text-black">${(balance / 100).toFixed(2)}</span>
         </p>
       )}
 

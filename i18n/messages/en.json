@@ -40,7 +40,7 @@
   },
   "dashboard": {
     "overview": "Overview",
-    "balance": "Balance (cents)",
+    "balance": "Balance (USD)",
     "todayCalls": "Today Calls",
     "todayTokens": "Today Tokens",
     "weekCalls": "Week Calls",
@@ -141,7 +141,7 @@
       "topUp": "Top Up",
       "processing": "Processing...",
       "email": "Email",
-      "balance": "Balance (cents)",
+      "balance": "Balance (USD)",
       "registered": "Registered"
     }
   },

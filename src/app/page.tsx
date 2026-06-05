@@ -71,8 +71,8 @@ function LoginForm() {
           <div className="rounded-xl bg-white p-6 shadow text-center ring-2 ring-black">
             <h3 className="font-bold text-lg mb-1">DeepSeek Chat</h3>
             <p className="text-sm text-gray-500 mb-3">deepseek-chat / deepseek-reasoner</p>
-              <p className="text-3xl font-bold">$0.20 / $0.60<span className="text-sm text-gray-400">/1M tokens</span></p>
-            <p className="text-xs text-gray-400 mt-2">Input / Output. Same as official API.</p>
+              <p className="text-3xl font-bold">$1.40<span className="text-sm text-gray-400">/1M tokens</span></p>
+            <p className="text-xs text-gray-400 mt-2">Output. Simple, transparent pricing.</p>
           </div>
           <div className="rounded-xl bg-white p-6 shadow text-center">
             <h3 className="font-bold text-lg mb-1">GPT-4o / Claude</h3>

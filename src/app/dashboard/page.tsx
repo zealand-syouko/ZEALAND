@@ -45,7 +45,7 @@ export default function DashboardPage() {
       )}
       {balance > 0 && balance < 100 && (
         <div className="rounded-xl bg-yellow-50 border border-yellow-300 p-4">
-          <p className="font-bold text-yellow-800">Low balance ({balance} cents). <Link href="/dashboard/recharge" className="underline">Recharge</Link> to avoid interruption.</p>
+          <p className="font-bold text-yellow-800">Low balance (${(balance/100).toFixed(2)}). <Link href="/dashboard/recharge" className="underline">Recharge</Link> to avoid interruption.</p>
         </div>
       )}
 
@@ -63,7 +63,7 @@ export default function DashboardPage() {
       )}
 
       <div className="grid grid-cols-4 gap-4">
-        <StatCard label={t("balance")} value={balance.toLocaleString()} highlight />
+        <StatCard label={t("balance")} value={"$" + (balance/100).toFixed(2)} highlight />
         <StatCard label={t("todayCalls")} value={stats.today.calls.toLocaleString()} />
         <StatCard label={t("todayTokens")} value={stats.today.tokens.toLocaleString()} />
         <StatCard label={t("activeKeys")} value={`${stats.activeKeys}/${stats.totalKeys}`} />
