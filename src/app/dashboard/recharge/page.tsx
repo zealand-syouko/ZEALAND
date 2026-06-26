@@ -71,7 +71,25 @@ export default function RechargePage() {
             <p className="text-xl font-mono mt-1 break-all">{info.address}</p>
             <p className="text-xs text-gray-500 mt-2">{info.note}</p>
           </div>
-          <p className="text-xs text-gray-500">After sending payment, the admin will confirm your order and your balance will be credited.</p>
+          <div className="border-t pt-3 space-y-2">
+            <p className="text-xs font-bold">Already sent? Verify automatically:</p>
+            <input id="txHashInput" type="text" placeholder="Transaction Hash (TxID)" className="w-full rounded border px-3 py-2 text-xs font-mono" />
+            <button onClick={async () => {
+              const txHash = (document.getElementById("txHashInput") as HTMLInputElement).value;
+              if (!txHash) return alert("Paste the transaction hash from your wallet");
+              setMsg("Verifying on blockchain...");
+              const res = await fetch("/api/payment/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: activeOrder, txHash }) });
+              const data = await res.json();
+              if (res.ok) {
+                setMsg("Payment verified! Balance credited.");
+                setActiveOrder(null); setActiveMethod("");
+                fetchOrders();
+              } else {
+                setMsg(data.error || "Verification failed");
+              }
+            }} className="w-full rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700">Verify Payment</button>
+          </div>
+          <p className="text-xs text-gray-400">Or the admin will confirm manually.</p>
           <button onClick={() => { setActiveOrder(null); setActiveMethod(""); }} className="text-sm text-blue-600 underline">Close</button>
         </div>
       )}

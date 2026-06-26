@@ -104,6 +104,7 @@ model PaymentOrder {
   amount        Int
   method        String
   tradeNo       String?  @map("trade_no")
+  txHash        String?  @map("tx_hash")
   status        String   @default("pending")
   createdAt     DateTime @default(now()) @map("created_at")
   paidAt        DateTime? @map("paid_at")
