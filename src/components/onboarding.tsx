@@ -12,17 +12,28 @@ export function Onboarding() {
   useEffect(() => {
     const d = localStorage.getItem("onboarding-dismissed");
     if (d) { setDismissed(true); return; }
-    Promise.all([
-      fetch("/api/keys").then(r => r.json()),
-      fetch("/api/dashboard/balance").then(r => r.json()),
-      fetch("/api/dashboard/stats").then(r => r.json()),
-    ]).then(([keys, bal, stats]) => {
-      setState({
-        hasKeys: Array.isArray(keys) && keys.length > 0,
-        hasBalance: bal.balance > 0,
-        hasCalls: stats.today?.calls > 0 || stats.week?.calls > 0,
-      });
-    }).catch(() => {});
+
+    async function check() {
+      try {
+        const [keysRes, balRes, statsRes] = await Promise.all([
+          fetch("/api/keys"),
+          fetch("/api/dashboard/balance"),
+          fetch("/api/dashboard/stats"),
+        ]);
+        const keys = await keysRes.json();
+        const bal = await balRes.json();
+        const stats = await statsRes.json();
+
+        setState({
+          hasKeys: Array.isArray(keys) && keys.length > 0,
+          hasBalance: (bal?.balance ?? 0) > 0,
+          hasCalls: (stats?.today?.calls ?? 0) > 0 || (stats?.week?.calls ?? 0) > 0,
+        });
+      } catch {
+        setState({ hasKeys: false, hasBalance: false, hasCalls: false });
+      }
+    }
+    check();
   }, []);
 
   function dismiss() {
@@ -31,7 +42,6 @@ export function Onboarding() {
   }
 
   if (!state || dismissed) return null;
-  // All done, nothing to guide
   if (state.hasKeys && state.hasBalance && state.hasCalls) return null;
 
   const steps = [
@@ -42,8 +52,6 @@ export function Onboarding() {
 
   const done = steps.filter(s => s.done).length;
 
-  if (done === 3) return null;
-
   return (
     <div className="rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -51,7 +59,7 @@ export function Onboarding() {
           <h3 className="font-bold text-lg text-blue-900">Getting Started</h3>
           <p className="text-sm text-blue-700">{done}/3 steps completed</p>
         </div>
-        <button onClick={dismiss} className="text-sm text-blue-500 hover:text-blue-700 underline">Dismiss</button>
+        <button onClick={dismiss} className="rounded border px-3 py-1 text-sm bg-white hover:bg-gray-50 text-gray-600">Close</button>
       </div>
       <div className="grid grid-cols-3 gap-4">
         {steps.map((step, i) => (
