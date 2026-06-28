@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { Onboarding } from "@/components/onboarding";
 
 interface Stats {
   today: { calls: number; tokens: number };
@@ -38,6 +39,8 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{t("overview")}</h2>
 
+      <Onboarding />
+
       {balance === 0 && (
         <div className="rounded-xl bg-red-50 border border-red-300 p-4">
           <p className="font-bold text-red-800">Your balance is $0. API calls will be rejected. <Link href="/dashboard/recharge" className="underline">Recharge now</Link>.</p>
@@ -46,6 +49,11 @@ export default function DashboardPage() {
       {balance > 0 && balance < 100 && (
         <div className="rounded-xl bg-yellow-50 border border-yellow-300 p-4">
           <p className="font-bold text-yellow-800">Low balance (${(balance/100).toFixed(2)}). <Link href="/dashboard/recharge" className="underline">Recharge</Link> to avoid interruption.</p>
+        </div>
+      )}
+      {balance > 0 && stats.transactions.filter(t => t.type === "topup").length === 0 && (
+        <div className="rounded-xl bg-gray-50 border border-gray-300 p-4">
+          <p className="font-bold text-gray-800">No top-ups yet. <Link href="/dashboard/recharge" className="underline">Add your first funds</Link> to start using the API.</p>
         </div>
       )}
 
