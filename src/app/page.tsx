@@ -18,8 +18,8 @@ function LoginForm() {
 
   const [pubUsers, setPubUsers] = useState("");
   const [pubTokens, setPubTokens] = useState("");
-  const [displayPrice, setDisplayPrice] = useState("$1 per 25M tokens");
-  const [pricePerDollar, setPricePerDollar] = useState("25M");
+  const [displayPrice, setDisplayPrice] = useState("$1.50 per 1M tokens");
+  const [pricePerDollar, setPricePerDollar] = useState("$1.50/1M");
 
   useEffect(() => {
     fetch("/api/dashboard/public-stats").then(r => r.json()).then(d => {
@@ -28,9 +28,9 @@ function LoginForm() {
     }).catch(() => {});
     fetch("/api/pricing").then(r => r.json()).then(p => {
       if (p && p.outputPrice) {
-        const tokens = Math.round(100 / p.outputPrice);
-        setPricePerDollar(tokens + "M");
-        setDisplayPrice("$1 = " + tokens + "M tokens");
+        const dollars = (p.outputPrice / 100).toFixed(2);
+        setPricePerDollar("$" + dollars + "/1M");
+        setDisplayPrice("$" + dollars + " per 1M tokens");
       }
     }).catch(() => {});
   }, []);
