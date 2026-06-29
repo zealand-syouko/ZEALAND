@@ -30,7 +30,7 @@ async function main() {
     { model: "gpt", inputPrice: 150, outputPrice: 600 },
     { model: "claude", inputPrice: 300, outputPrice: 1500 },
     { model: "gemini", inputPrice: 35, outputPrice: 100 },
-    { model: "deepseek", inputPrice: 20, outputPrice: 60 },
+    { model: "deepseek", inputPrice: 4, outputPrice: 4 },
   ];
   for (const p of pricing) {
     await prisma.modelPricing.upsert({

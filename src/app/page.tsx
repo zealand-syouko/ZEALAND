@@ -21,6 +21,13 @@ function LoginForm() {
       document.getElementById("pub-users")!.textContent = d.totalUsers + " users";
       document.getElementById("pub-tokens")!.textContent = (d.totalTokens / 1000000).toFixed(1) + "M tokens served";
     }).catch(() => {});
+    fetch("/api/pricing").then(r => r.json()).then(p => {
+      if (p && p.outputPrice) {
+        const perDollar = Math.round(1000000 / p.outputPrice * 100 / 1000000);
+        document.getElementById("dyn-price")!.innerHTML = "$1<span class=\"text-sm text-gray-400\"> = " + (perDollar > 1 ? perDollar + "M" : (1000000 / p.outputPrice).toFixed(0)) + " tokens</span>";
+        document.getElementById("price-card")!.textContent = "$1 = " + (perDollar > 1 ? perDollar + "M" : "~" + (1000000 / p.outputPrice).toFixed(0)) + " tokens";
+      }
+    }).catch(() => {});
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -60,7 +67,7 @@ function LoginForm() {
         <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
           <div className="text-center"><p className="text-3xl mb-2">🔑</p><h3 className="font-bold">No Credit Card</h3><p className="text-sm text-gray-500 mt-1">Pay with USDT. No KYC. No bank verification.</p></div>
           <div className="text-center"><p className="text-3xl mb-2">⚡</p><h3 className="font-bold">OpenAI Format</h3><p className="text-sm text-gray-500 mt-1">Drop-in replacement. Works with any ChatGPT client or SDK.</p></div>
-          <div className="text-center"><p className="text-3xl mb-2">💰</p><h3 className="font-bold">80% Cheaper</h3><p className="text-sm text-gray-500 mt-1">$0.02 input / $0.06 output per 1M tokens. No hidden fees.</p></div>
+          <div className="text-center"><p className="text-3xl mb-2">💰</p><h3 className="font-bold" id="price-card">$1 = 25M tokens</h3><p className="text-sm text-gray-500 mt-1">Flat rate. No separate input/output pricing.</p></div>
         </div>
       </div>
 
@@ -71,8 +78,8 @@ function LoginForm() {
           <div className="rounded-xl bg-white p-6 shadow text-center ring-2 ring-black">
             <h3 className="font-bold text-lg mb-1">DeepSeek Chat</h3>
             <p className="text-sm text-gray-500 mb-3">deepseek-chat / deepseek-reasoner</p>
-              <p className="text-3xl font-bold">$1.40<span className="text-sm text-gray-400">/1M tokens</span></p>
-            <p className="text-xs text-gray-400 mt-2">Output. Simple, transparent pricing.</p>
+    <p className="text-3xl font-bold" id="dyn-price">$1<span className="text-sm text-gray-400"> = 25M tokens</span></p>
+            <p className="text-xs text-gray-400 mt-2">Flat rate. 10M tokens for just $0.40</p>
           </div>
           <div className="rounded-xl bg-white p-6 shadow text-center">
             <h3 className="font-bold text-lg mb-1">GPT-4o / Claude</h3>
